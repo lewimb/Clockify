@@ -1,18 +1,23 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router";
-import SignInPage from "../src/pages/auth/SignInPage.jsx";
+import TimerPage from "./pages/TimerPage.jsx";
+import SignInPage from "./pages/auth/SignInPage.jsx";
 import RegisterPage from "./pages/auth/RegisterPage.jsx";
 import "./index.css";
-import App from "./App.jsx";
+import MainLayout from "./layout/MainLayout.jsx";
+import AuthLayout from "./layout/AuthLayout.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />}>
-          <Route index element={<SignInPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<TimerPage />} />
+        </Route>
+        <Route element={<AuthLayout />}>
+          <Route path="login" element={<SignInPage />} />
+          <Route path="register" element={<RegisterPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,6 +1,6 @@
 import { Outlet } from "react-router";
 
-function App() {
+function AuthLayout() {
   return (
     <>
       <div className="flex w-screen h-screen justify-center items-center">
@@ -10,4 +10,4 @@ function App() {
   );
 }
 
-export default App;
+export default AuthLayout;

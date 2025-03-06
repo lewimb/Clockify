@@ -3,6 +3,9 @@
 
 * {
   font-family: "Nunito Sans", "Arial";
-  color: white;
+}
+
+body {
   background-color: #25367b;
+  color: white;
 }

@@ -1,10 +1,11 @@
 import { twMerge } from "tailwind-merge";
 
-function Button({ children, className }) {
+function Button({ children, className, onClick }) {
   return (
     <button
+      onClick={onClick}
       className={twMerge(
-        "bg-black h-[48px] shadow-lg bg-gradient-to-r from-[#45CDDC] to-[#2EBED9] rounded-xl",
+        "h-[48px] shadow-lg bg-gradient-to-r from-[#45CDDC] to-[#2EBED9] rounded-xl",
         className
       )}
     >
