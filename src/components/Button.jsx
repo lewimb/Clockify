@@ -4,7 +4,7 @@ function Button({ children, className }) {
   return (
     <button
       className={twMerge(
-        "bg-black h-[48px] bg-gradient-to-r from-[#45CDDC] to-[#2EBED9] rounded-xl",
+        "bg-black h-[48px] shadow-lg bg-gradient-to-r from-[#45CDDC] to-[#2EBED9] rounded-xl",
         className
       )}
     >
