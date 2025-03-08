@@ -1,4 +1,5 @@
 import unsee from "../assets/Unsee.svg";
+import see from "../assets/eye.svg";
 import key from "../assets/Key.svg";
 import { useState } from "react";
 
@@ -16,9 +17,9 @@ function PasswordInput({ placeholder, children }) {
         <div className="flex flex-col w-full justify-end">
           <div className="relative">
             <img
-              src={unsee}
+              src={visible ? unsee : see}
               onClick={changeVisible}
-              className="absolute right-0 "
+              className="absolute right-0 top-0 transition duration-300 ease-in-out"
             />
             <input
               type={visible ? "password" : "text"}

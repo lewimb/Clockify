@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Button from "./Button";
+import Location from "./Location";
 
 function Stopwatch() {
   const [isRunning, setIsRunning] = useState(false);
@@ -99,6 +100,7 @@ function Stopwatch() {
             <span className="date text-[12px]">{endDate || "-"}</span>
           </div>
         </div>
+        <Location />
         <textarea
           className="bg-white rounded-xl text-[#25367B] focus:outline-none p-2 resize-none w-[360px] h-[96px]"
           name="description"

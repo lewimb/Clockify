@@ -8,8 +8,12 @@ function Navbar() {
     <div className="w-full flex px-[136px] py-[46px] items-center justify-between">
       <img src={logo} alt="Logo Clockify" />
       <div className="flex justify-between w-[180px] h-[48px]">
-        <Link className={linkStyle}>Timer</Link>
-        <Link className={linkStyle}>Activity</Link>
+        <Link to={"/"} className={linkStyle}>
+          Timer
+        </Link>
+        <Link to={"/activity"} className={linkStyle}>
+          Activity
+        </Link>
       </div>
     </div>
   );
