@@ -5,13 +5,15 @@ import Location from "./Location";
 function Stopwatch() {
   const [isRunning, setIsRunning] = useState(false);
   const [isStop, setIsStop] = useState(false);
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
   const [elapsedTime, setElapsedTime] = useState(0);
   const intervalIdRef = useRef(null);
   const startTimeRef = useRef(0);
+  const [timeStamps, setTimeStamps] = useState({
+    startTime: "",
+    endTime: "",
+    startDate: "",
+    endDate: "",
+  });
 
   useEffect(() => {
     if (isRunning) {
@@ -25,51 +27,56 @@ function Stopwatch() {
     return () => clearInterval(intervalIdRef.current);
   }, [isRunning]);
 
-  function timeFormat(h, m, s) {
-    return `${h.toString().padStart(2, "0")}:${m
-      .toString()
-      .padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+  function getCurrentTimeStamp() {
+    const date = new Date();
+
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const seconds = date.getSeconds().toString().padStart(2, "0");
+
+    return {
+      date: `${date.getDate()} ${date.toLocaleString("default", {
+        month: "short",
+      })} ${date.getFullYear() % 100}`,
+      time: `${hours}:${minutes}:${seconds}`,
+    };
   }
 
   function start() {
     setIsRunning(true);
     setIsStop(false);
-    const date = new Date();
     startTimeRef.current = Date.now() - elapsedTime;
 
-    setStartTime(
-      timeFormat(date.getHours(), date.getMinutes(), date.getSeconds())
-    );
-    setStartDate(
-      `${date.getDate()} ${date.toLocaleString("default", {
-        month: "short",
-      })} ${date.getFullYear() % 100}`
-    );
+    const { time, date } = getCurrentTimeStamp();
+
+    setTimeStamps((prev) => ({
+      ...prev,
+      startTime: time,
+      startDate: date,
+    }));
   }
 
   function stop() {
     setIsRunning(false);
     setIsStop(true);
-    const date = new Date();
-
-    setEndTime(
-      timeFormat(date.getHours(), date.getMinutes(), date.getSeconds())
-    );
-    setEndDate(
-      `${date.getDate()} ${date.toLocaleString("default", {
-        month: "short",
-      })} ${date.getFullYear() % 100}`
-    );
+    const { time, date } = getCurrentTimeStamp();
+    setTimeStamps((prev) => ({
+      ...prev,
+      endTime: time,
+      endDate: date,
+    }));
   }
 
   function restart() {
     setElapsedTime(0);
     setIsRunning(false);
     setIsStop(false);
-    setStartTime("");
-    setEndTime("");
-    setStartDate("");
-    setEndDate("");
+    setTimeStamps(() => ({
+      startTime: "",
+      startDate: "",
+      endTime: "",
+      endDate: "",
+    }));
   }
 
   function formatTime() {
@@ -91,13 +98,21 @@ function Stopwatch() {
         <div className="container flex w-60 justify-between">
           <div className="flex flex-col">
             <span className="text-sm">Start Time</span>
-            <span className="time text-[20px]">{startTime || "-"}</span>
-            <span className="date text-[12px]">{startDate || "-"}</span>
+            <span className="time text-[20px]">
+              {timeStamps.startTime || "-"}
+            </span>
+            <span className="date text-[12px]">
+              {timeStamps.startDate || "-"}
+            </span>
           </div>
           <div className="flex flex-col">
             <span className="text-sm">End Time</span>
-            <span className="time text-[20px]">{endTime || "-"}</span>
-            <span className="date text-[12px]">{endDate || "-"}</span>
+            <span className="time text-[20px]">
+              {timeStamps.endTime || "-"}
+            </span>
+            <span className="date text-[12px]">
+              {timeStamps.endDate || "-"}
+            </span>
           </div>
         </div>
         <Location />
