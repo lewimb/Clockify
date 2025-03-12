@@ -3,7 +3,7 @@ import see from "../assets/eye.svg";
 import key from "../assets/Key.svg";
 import { useState } from "react";
 
-function PasswordInput({ placeholder, children }) {
+function PasswordInput({ placeholder, name, children, ...props }) {
   const [visible, setVisible] = useState(false);
 
   function changeVisible() {
@@ -17,15 +17,16 @@ function PasswordInput({ placeholder, children }) {
         <div className="flex flex-col w-full justify-end">
           <div className="relative">
             <img
-              src={visible ? unsee : see}
+              src={visible ? see : unsee}
               onClick={changeVisible}
               className="absolute right-0 top-0 transition duration-300 ease-in-out"
             />
             <input
-              type={visible ? "password" : "text"}
-              id="password"
+              type={visible ? "text" : "password"}
+              name={name}
               placeholder={placeholder}
               className="border-b-2 w-full py-1 text-sm text-[#A7A6C5] border-[#A7A6C5] focus:outline-none"
+              {...props}
             />
           </div>
           {children}

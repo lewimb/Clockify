@@ -17,7 +17,7 @@
   ],
   "activities": [
     {
-      "uuid": "a12b34c5-d67e-89f0-12g3-456789h01234",
+      "id": 1,
       "description": "Morning Jog",
       "start_time": "2024-03-06 06:00:00",
       "end_time": "2024-03-06 07:00:00",
@@ -28,7 +28,7 @@
       "Useruuid": "123e4567-e89b-12d3-a456-426614174000"
     },
     {
-      "uuid": "b23c45d6-e78f-90g1-23h4-567890i12345",
+      "id": 2,
       "description": "Work Meeting",
       "start_time": "2024-03-06 09:00:00",
       "end_time": "2024-03-06 10:30:00",
@@ -39,7 +39,7 @@
       "Useruuid": "234e5678-f90c-34d5-b678-526715185111"
     },
     {
-      "uuid": "c34d56e7-f89g-01h2-34i5-678901j23456",
+      "id": 3,
       "description": "Gym Workout",
       "start_time": "2024-03-06 18:00:00",
       "end_time": "2024-03-06 19:30:00",

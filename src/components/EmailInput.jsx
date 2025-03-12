@@ -1,6 +1,6 @@
 import mail from "../assets/Mail.svg";
 
-function EmailInput() {
+function EmailInput({ ...props }) {
   return (
     <>
       <div className="email-input w-full flex items-center gap-3 ">
@@ -10,9 +10,11 @@ function EmailInput() {
             Email
           </label>
           <input
-            type="text"
+            type="email"
+            name="email"
             id="email"
-            className="border-b-2 w-full text-sm bofocus:outline-none "
+            className="border-b-2 w-full text-sm focus:outline-none"
+            {...props}
           />
         </div>
       </div>
