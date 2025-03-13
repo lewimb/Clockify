@@ -10,7 +10,7 @@ import MainLayout from "./layout/MainLayout.jsx";
 import AuthLayout from "./layout/AuthLayout.jsx";
 import EmailPage from "./pages/auth/EmailPage.jsx";
 import EditPage from "./pages/EditPage.jsx";
-import AuthProvider from "./provider/AuthProvider.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
 import "./index.css";
 
 const queryClient = new QueryClient();

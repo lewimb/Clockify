@@ -1,18 +1,22 @@
 import logo from "../../assets/Logo.svg";
 import Button from "../../components/Button";
 import { Link } from "react-router";
+import useAuth from "../../hooks/useAuth";
 import EmailInput from "../../components/EmailInput";
 import PasswordInput from "../../components/PasswordInput";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
 function SignInPage() {
+  const { loginAction } = useAuth();
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
-    onSubmit: (values) => {},
+    onSubmit: (values) => {
+      loginAction(values);
+    },
     validationSchema: Yup.object({
       email: Yup.string()
         .email("Invalid email format")

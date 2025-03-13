@@ -1,7 +1,12 @@
-import { Outlet } from "react-router";
+import { Outlet, Navigate } from "react-router";
 import Navbar from "../section/Navbar";
+import useAuth from "../hooks/useAuth";
 
 function App() {
+  const { token } = useAuth();
+
+  if (!token) return <Navigate to={"/login"} />;
+
   return (
     <>
       <Navbar />
