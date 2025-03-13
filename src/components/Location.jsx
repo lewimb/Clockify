@@ -7,7 +7,7 @@ function Location({ data }) {
       positionOptions: {
         enableHighAccuracy: false,
       },
-      userDecisionTimeout: 5000,
+      userDecisionTimeout: 50000,
     });
 
   if (!data) {
@@ -24,7 +24,7 @@ function Location({ data }) {
           <>
             <span className="text-sm text-center w-full">
               {coords
-                ? `${coords.latitude}, ${coords.longitude}`
+                ? `${coords.latitude}.${coords.longitude}`
                 : "Fetching location..."}
             </span>
           </>
@@ -39,7 +39,7 @@ function Location({ data }) {
         <img className="text-start" src={navigation_image} alt="Navigation" />
         <>
           <span className="text-sm text-center w-full">
-            {`${data?.location_lat}, ${data?.location_lng}`}
+            {`${data?.location_lat}.${data?.location_lng}`}
           </span>
         </>
       </div>

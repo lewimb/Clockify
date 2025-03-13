@@ -32,11 +32,16 @@ function SignInPage() {
             <EmailInput
               onChange={formik.handleChange}
               value={formik.values.email}
+              onBlur={formik.handleBlur}
             />
+            {formik.touched.email && formik.errors.email && (
+              <p className="text-red-500 text-sm">{formik.errors.email}</p>
+            )}
             <PasswordInput
               name={"password"}
               onChange={formik.handleChange}
               value={formik.values.password}
+              onBlur={formik.handleBlur}
               placeholder={"Input Your Password"}
             >
               <a href="#" className="inline">
@@ -45,6 +50,9 @@ function SignInPage() {
                 </u>
               </a>
             </PasswordInput>
+            {formik.touched.password && formik.errors.password && (
+              <span className="text-red-600">{formik.errors.password}</span>
+            )}
             <Button type="submit" className="my-5 w-[328px]">
               Sign in
             </Button>

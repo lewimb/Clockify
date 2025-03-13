@@ -34,20 +34,35 @@ function RegisterPage() {
           <div className="w-[400px] flex flex-col gap-3 items-center ">
             <EmailInput
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               value={formik.values.email}
             />
+            {formik.touched.email && formik.errors.email && (
+              <p className="text-red-500 text-sm">{formik.errors.email}</p>
+            )}
             <PasswordInput
               name="password"
               placeholder="Input Your Password"
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               value={formik.values.password}
             />
+            {formik.touched.password && formik.errors.password && (
+              <span className="text-red-600">{formik.errors.password}</span>
+            )}
             <PasswordInput
               name="confirmPassword"
               placeholder="Confirm Your Password"
+              onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               value={formik.values.confirmPassword}
             />
+            {formik.touched.confirmPassword &&
+              formik.errors.confirmPassword && (
+                <span className="text-red-600">
+                  {formik.errors.confirmPassword}
+                </span>
+              )}
             <Button type={"submit"} className="my-5 w-[328px]">
               CREATE YOUR ACCOUNT
             </Button>
