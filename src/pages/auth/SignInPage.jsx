@@ -12,9 +12,7 @@ function SignInPage() {
       email: "",
       password: "",
     },
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-    },
+    onSubmit: (values) => {},
     validationSchema: Yup.object({
       email: Yup.string()
         .email("Invalid email format")

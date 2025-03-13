@@ -1,11 +1,11 @@
 import mail from "../assets/Mail.svg";
 
-function EmailInput({ ...props }) {
+function EmailInput({ children, ...props }) {
   return (
     <>
       <div className="email-input w-full flex items-center gap-3 ">
         <img src={mail} className="size-6" />
-        <div className="flex flex-col my-2 w-full justify-center ">
+        <div className="flex flex-col py-3 w-full justify-center ">
           <label htmlFor="email" className="size-3.5 pb-2 h-auto text-sm">
             Email
           </label>
@@ -17,6 +17,7 @@ function EmailInput({ ...props }) {
             {...props}
           />
         </div>
+        {children}
       </div>
     </>
   );

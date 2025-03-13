@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router";
 
-export default function useVerifyEmail() {
+export default function EmailVerification() {
   const location = useLocation();
   const [isVerified, setIsVerified] = useState(false);
   const [error, setError] = useState(null);
@@ -12,7 +12,7 @@ export default function useVerifyEmail() {
         const params = new URLSearchParams(location.search);
         const emailToken = params.get("emailToken");
         const response = await fetch(
-          "http://localhost:3000/api/v1/user/verifyemail",
+          "https://light-master-eagle.ngrok-free.app/api/v1/user/verifyemail",
           {
             method: "PATCH",
             headers: {
@@ -21,6 +21,9 @@ export default function useVerifyEmail() {
             body: JSON.stringify({ emailToken: emailToken }),
           }
         );
+        if (!response.ok) {
+          throw new Error("Sending email failed");
+        }
         if (response.data.status === "Success") {
           setIsVerified(true);
         }
