@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { useEffect } from "react";
 
 function VerifyUserEmail() {
-  const { isVerified, error } = useEmailVerification(); // Fix destructuring
+  const { isVerified, error } = useEmailVerification();
   const navigate = useNavigate();
 
   useEffect(() => {

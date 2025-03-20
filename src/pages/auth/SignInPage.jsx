@@ -46,11 +46,11 @@ function SignInPage() {
               onBlur={formik.handleBlur}
               placeholder={"Input Your Password"}
             >
-              <a href="#" className="inline">
+              <Link to="/forget" className="inline">
                 <u className="text-[#A7A6C5] text-sm block pt-1 text-end">
                   Forgot Password
                 </u>
-              </a>
+              </Link>
             </PasswordInput>
             {formik.touched.password && formik.errors.password && (
               <span className="text-red-600">{formik.errors.password}</span>

@@ -1,7 +1,8 @@
+import { useEffect } from "react";
 import navigation_image from "../assets/yellow_navigation.svg";
 import { useGeolocated } from "react-geolocated";
 
-function Location({ data }) {
+function Location({ data, sendDataFromChild = null }) {
   const { coords, isGeolocationAvailable, isGeolocationEnabled } =
     useGeolocated({
       positionOptions: {
@@ -9,6 +10,15 @@ function Location({ data }) {
       },
       userDecisionTimeout: 50000,
     });
+
+  useEffect(() => {
+    if (sendDataFromChild != null) {
+      sendDataFromChild(() => ({
+        location_lat: coords?.latitude,
+        location_lng: coords?.longitude,
+      }));
+    }
+  }, [sendDataFromChild, coords]);
 
   if (!data) {
     return (

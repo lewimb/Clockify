@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap");
+@import "tailwindcss";
 
 * {
   font-family: "Nunito Sans", "Arial";
@@ -13,4 +13,24 @@ body {
 .slide-in {
   transform: translateX(-4.1rem);
   background-color: #192865;
+}
+
+.modal::before {
+  position: absolute;
+  z-index: -100;
+  content: " ";
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  opacity: 0.7;
+}
+
+input[data-autocompleted] {
+  background-color: transparent !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  transition: background-color 0s 0s, color 0s 0s;
+  transition-delay: calc(infinity * 1s);
 }

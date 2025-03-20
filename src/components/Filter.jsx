@@ -22,7 +22,7 @@ function Filter() {
         onClick={() => {
           setIsActive(!isActive);
         }}
-        className="h-10 bg-[#434B8C] px-5 rounded-xl flex items-center gap-14 justify-evenly relative"
+        className="h-10 bg-[#434B8C] px-5 rounded-xl flex items-center gap-15 justify-center relative"
       >
         <p className="whitespace-nowrap">{initialState}</p>
         <img src={dropdown} alt="dropdown" />

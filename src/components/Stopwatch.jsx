@@ -1,13 +1,28 @@
 import { useEffect, useRef, useState } from "react";
 import Button from "./Button";
 import Location from "./Location";
+import { useNavigate } from "react-router";
+import { useInsertActivity } from "../lib/tsQuery/queries";
 
 function Stopwatch() {
   const [isRunning, setIsRunning] = useState(false);
   const [isStop, setIsStop] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const intervalIdRef = useRef(null);
+  const { mutate: insertActivity } = useInsertActivity();
   const startTimeRef = useRef(0);
+  const [distance, setDistance] = useState({
+    location_lat: null,
+    location_lng: null,
+  });
+  const navigate = useNavigate();
+  const [description, setDescription] = useState("");
+
+  const [dateProps, setDateProps] = useState({
+    start_time: null,
+    end_time: null,
+  });
+
   const [timeStamps, setTimeStamps] = useState({
     startTime: "",
     endTime: "",
@@ -39,6 +54,7 @@ function Stopwatch() {
         month: "short",
       })} ${date.getFullYear() % 100}`,
       time: `${hours}:${minutes}:${seconds}`,
+      currDate: date,
     };
   }
 
@@ -47,7 +63,12 @@ function Stopwatch() {
     setIsStop(false);
     startTimeRef.current = Date.now() - elapsedTime;
 
-    const { time, date } = getCurrentTimeStamp();
+    const { time, date, currDate } = getCurrentTimeStamp();
+
+    setDateProps((prev) => ({
+      ...prev,
+      start_time: currDate,
+    }));
 
     setTimeStamps((prev) => ({
       ...prev,
@@ -59,7 +80,11 @@ function Stopwatch() {
   function stop() {
     setIsRunning(false);
     setIsStop(true);
-    const { time, date } = getCurrentTimeStamp();
+    const { time, date, currDate } = getCurrentTimeStamp();
+    setDateProps((prev) => ({
+      ...prev,
+      end_time: currDate,
+    }));
     setTimeStamps((prev) => ({
       ...prev,
       endTime: time,
@@ -79,6 +104,10 @@ function Stopwatch() {
     }));
   }
 
+  function handleChange(e) {
+    setDescription(e.target.value);
+  }
+
   function formatTime() {
     const hours = Math.floor(elapsedTime / (1000 * 60 * 60));
     const minutes = Math.floor((elapsedTime / (1000 * 60)) % 60);
@@ -89,9 +118,20 @@ function Stopwatch() {
       .padStart(2, "0")} : ${seconds.toString().padStart(2, "0")}`;
   }
 
+  function handleSubmit() {
+    const values = {
+      description,
+      ...distance,
+      ...dateProps,
+    };
+    insertActivity(values, {
+      onSuccess: () => navigate("/activity"),
+    });
+  }
+
   return (
     <div className="stopwatch flex flex-col justify-center items-center">
-      <span className="display text-7xl font-bold mb-32 select-none pointer-events-none">
+      <span className="display text-7xl font-bold mb-30 select-none pointer-events-none">
         {formatTime()}
       </span>
       <div className="controls flex flex-col items-center gap-7">
@@ -115,8 +155,9 @@ function Stopwatch() {
             </span>
           </div>
         </div>
-        <Location />
+        <Location sendDataFromChild={setDistance} />
         <textarea
+          onChange={handleChange}
           className="bg-white rounded-xl text-[#25367B] focus:outline-none p-2 resize-none w-[360px] h-[96px]"
           name="description"
           id="description"
@@ -144,7 +185,7 @@ function Stopwatch() {
           {isStop && (
             <>
               <Button
-                onClick={() => console.log("Save Clicked")}
+                onClick={handleSubmit}
                 className="start-button w-[156px] text-black bg-white"
               >
                 SAVE

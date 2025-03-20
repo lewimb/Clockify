@@ -1,75 +1,81 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
-import { useGetActivityById } from "../lib/tsQuery/queries";
+import { useNavigate } from "react-router";
+import { useGetActivityById, useDeleteActivity } from "../lib/tsQuery/queries";
 import Location from "../components/Location";
 import Button from "../components/Button";
+import { formatDate, formatTime, durationsCalc } from "../utils/timeFormatter";
+import DateModal from "../components/DateModal";
 
 function EditPage() {
   const { id } = useParams();
-  const [duration, setDuration] = useState("");
-  const [start, setStart] = useState({ time: "-", date: "-" });
-  const [end, setEnd] = useState({ time: "-", date: "-" });
-  const { data } = useGetActivityById(id);
-  const [value, setValue] = useState(data?.description || "");
+  const navigate = useNavigate();
+  const { data, isLoading } = useGetActivityById(id);
+  const { mutate: deleteActivity } = useDeleteActivity(id);
+  const [modal, setModal] = useState(false);
+  const [value, setValue] = useState("");
+  const [selectedTimeType, setSelectedTimeType] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+
+  useEffect(() => {
+    if (!isLoading) {
+      setValue(data.description);
+      const start = formatTime(data.start_time);
+      const end = formatTime(data.end_time);
+      setStartTime(start);
+      setEndTime(end);
+    }
+  }, [isLoading, data]);
 
   function handleChange(e) {
     setValue(e.target.value);
   }
 
-  function handleDurations(durationMs) {
-    const hours = Math.floor(durationMs / (1000 * 60 * 60))
-      .toString()
-      .padStart(2, "0");
-    const minutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60))
-      .toString()
-      .padStart(2, "0");
-    const seconds = Math.floor((durationMs % (1000 * 60)) / 1000)
-      .toString()
-      .padStart(2, "0");
-
-    setDuration(`${hours} : ${minutes} : ${seconds}`);
+  function handleDelete(id) {
+    deleteActivity(id, {
+      onSuccess: () => navigate("/"),
+    });
   }
 
-  function formatDateTime(date) {
-    if (!date) return { time: "-", date: "-" };
-
-    return {
-      time: date.toLocaleTimeString("en-US", { hour12: false }),
-      date: `${date.getDate()} ${date.toLocaleString("default", {
-        month: "short",
-      })} ${date.getFullYear() % 100}`,
-    };
+  function handleModal() {
+    setModal(!modal);
   }
 
-  useEffect(() => {
-    if (!data?.start_time || !data?.end_time) return;
-
-    const startDate = new Date(data.start_time);
-    const endDate = new Date(data.end_time);
-
-    setStart(formatDateTime(startDate));
-    setEnd(formatDateTime(endDate));
-
-    const durationMs = endDate - startDate;
-    handleDurations(durationMs);
-  }, [data]);
+  if (isLoading) return <div>isLoading</div>;
 
   return (
-    <div className="stopwatch flex flex-col justify-center items-center">
-      <span className="display text-7xl font-bold mb-32 select-none pointer-events-none">
-        {duration}
+    <div className="stopwatch flex flex-col justify-center items-center relative">
+      <span className="display text-7xl font-bold mb-30 select-none pointer-events-none">
+        {durationsCalc(data.start_time, data.end_time)}
       </span>
       <div className="controls flex flex-col items-center gap-7">
-        <div className="container flex w-60 justify-between">
-          <div className="flex flex-col">
+        <div className="container flex gap-1 max-w-70 justify-between">
+          <div
+            onClick={() => {
+              handleModal();
+              setSelectedTimeType("start");
+            }}
+            className="flex flex-col transition-all duration-300 hover:bg-white/10 p-3"
+          >
             <span className="text-sm">Start Time</span>
-            <span className="time text-[20px]">{start.time}</span>
-            <span className="date text-[12px]">{start.date}</span>
+            <span className="time text-[20px]">{startTime}</span>
+            <span className="date text-[12px]">
+              {formatDate(data.start_time)}
+            </span>
           </div>
-          <div className="flex flex-col">
+          <div
+            onClick={() => {
+              handleModal();
+              setSelectedTimeType("end");
+            }}
+            className="flex flex-col transition-all duration-300 hover:bg-white/10 p-3"
+          >
             <span className="text-sm">End Time</span>
-            <span className="time text-[20px]">{end.time}</span>
-            <span className="date text-[12px]">{end.date}</span>
+            <span className="time text-[20px]">{endTime}</span>
+            <span className="date text-[12px]">
+              {formatDate(data.end_time)}
+            </span>
           </div>
         </div>
         <Location data={data} />
@@ -87,11 +93,21 @@ function EditPage() {
           >
             SAVE
           </Button>
-          <Button className="start-button w-[156px] text-black bg-white">
+          <Button
+            onClick={() => handleDelete(data.uuid)}
+            className="start-button w-[156px] text-black bg-white"
+          >
             DELETE
           </Button>
         </div>
       </div>
+      {modal && (
+        <DateModal
+          changeState={handleModal}
+          selectedTime={selectedTimeType === "start" ? startTime : endTime}
+          updateTime={selectedTimeType === "start" ? setStartTime : setEndTime}
+        />
+      )}
     </div>
   );
 }

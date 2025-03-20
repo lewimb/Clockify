@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router";
 
@@ -9,10 +9,15 @@ const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(Cookies.get("token") || "");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const storedToken = Cookies.get("token");
+    if (storedToken) setToken(storedToken);
+  }, []);
+
   const loginAction = async (value) => {
     try {
       const response = await fetch(
-        "https://light-master-eagle.ngrok-free.app/api/v1/user/login",
+        "https://f20d-103-19-109-29.ngrok-free.app/api/v1/user/login",
         {
           method: "POST",
           headers: {
@@ -33,8 +38,6 @@ const AuthProvider = ({ children }) => {
     } catch (err) {
       console.log(err);
     }
-
-    console.log(Cookies.get("token"));
   };
   const logOut = () => {
     setUser(null);
