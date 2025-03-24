@@ -9,6 +9,7 @@ import {
   forgetPassword,
   resetPasword,
   getSortActivities,
+  updateActivity,
   verifyEmail,
 } from "../../api/api";
 import EmailVerification from "../../pages/EmailPage";
@@ -42,11 +43,19 @@ const useVerifyEmail = () => {
 };
 
 // Activities tanstack
-const useGetActivities = () => {
+const useGetActivities = (queryParam) => {
   const { token } = useAuth();
   return useQuery({
-    queryKey: [ACTIVITY_KEY, token],
-    queryFn: () => getAllActivities(token),
+    queryKey: [ACTIVITY_KEY, token, queryParam],
+    queryFn: () => getAllActivities(token, queryParam),
+    enabled: !!token,
+  });
+};
+
+const useUpdateActivity = () => {
+  const { token } = useAuth();
+  return useMutation({
+    mutationFn: (values) => updateActivity(token, values),
   });
 };
 
@@ -100,6 +109,7 @@ export {
   useInsertActivity,
   useDeleteActivity,
   useForgetPassword,
+  useUpdateActivity,
   useResetPassword,
   useVerifyEmail,
 };

@@ -1,19 +1,31 @@
-const getAllActivities = async (token) => {
-  const res = await fetch(
-    "https://f20d-103-19-109-29.ngrok-free.app/api/v1/activity/",
-    {
-      method: "GET",
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${token}`,
-        "ngrok-skip-browser-warning": 6024,
-      },
-    }
-  );
+//http://localhost:3000/app
+//https://f20d-103-19-109-29.ngrok-free.app/
+
+const getAllActivities = async (token, { sortBy, description, lat, lng }) => {
+  const queryParams = new URLSearchParams();
+
+  if (sortBy) queryParams.append("sortBy", sortBy);
+  if (description) queryParams.append("description", description);
+  if (lat) queryParams.append("lat", lat);
+  if (lng) queryParams.append("lng", lng);
+
+  const url = `http://localhost:3000/api/v1/activity?${queryParams.toString()}`;
+
+  const res = await fetch(`${url}`, {
+    method: "GET",
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${token}`,
+      // "ngrok-skip-browser-warning": 6024,
+    },
+    cache: "no-store",
+  });
+  console.log(res);
   if (!res.ok) {
     throw new Error("Fetch failed");
   }
   const { data } = await res.json();
+  console.log(data);
 
   const dataGroupByDate = (activities) => {
     return activities.reduce((acc, activity) => {
@@ -28,10 +40,31 @@ const getAllActivities = async (token) => {
   return dataGroupByDate(data.activities);
 };
 
+const updateActivity = async (token, { uuid, ...values }) => {
+  try {
+    const res = await fetch(`http://localhost:3000/api/v1/activity/${uuid}`, {
+      method: "PATCH",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+        // "ngrok-skip-browser-warning": 6024,
+      },
+      body: JSON.stringify(values),
+    });
+    console.log(res);
+
+    if (!res.ok) throw new Error(res.Error);
+
+    console.log(await res.json());
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 const getSortActivities = async (params, token) => {
   try {
     const res = await fetch(
-      `https://f20d-103-19-109-29.ngrok-free.app/api/v1/activity/filter?sortBy=${params}`,
+      `http://localhost:3000/api/v1/activity/filter?sortBy=${params}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -53,16 +86,13 @@ const getSortActivities = async (params, token) => {
 const verifyEmail = async (emailToken) => {
   console.log(emailToken);
   try {
-    const res = await fetch(
-      "https://f20d-103-19-109-29.ngrok-free.app/api/v1/user/verifyemail",
-      {
-        method: "PATCH",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({ emailToken }),
-      }
-    );
+    const res = await fetch("http://localhost:3000/api/v1/user/verifyemail", {
+      method: "PATCH",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ emailToken }),
+    });
     console.log(res);
     if (!res.ok) throw new Error(res.Error);
   } catch (err) {
@@ -72,17 +102,14 @@ const verifyEmail = async (emailToken) => {
 
 const resetPasword = async ({ newPassword, confirmPassword, resetToken }) => {
   try {
-    const res = await fetch(
-      "https://f20d-103-19-109-29.ngrok-free.app/api/v1/user/resetpassword",
-      {
-        method: "PATCH",
-        headers: {
-          "Content-type": "application/json",
-          "ngrok-skip-browser-warning": 6024,
-        },
-        body: JSON.stringify({ newPassword, confirmPassword, resetToken }),
-      }
-    );
+    const res = await fetch("http://localhost:3000/api/v1/user/resetpassword", {
+      method: "PATCH",
+      headers: {
+        "Content-type": "application/json",
+        // "ngrok-skip-browser-warning": 6024,
+      },
+      body: JSON.stringify({ newPassword, confirmPassword, resetToken }),
+    });
 
     console.log(res);
     if (!res.ok) throw new Error(res.Error);
@@ -95,15 +122,12 @@ const resetPasword = async ({ newPassword, confirmPassword, resetToken }) => {
 
 const getActivityById = async (uuid, token) => {
   try {
-    const res = await fetch(
-      `https://f20d-103-19-109-29.ngrok-free.app/api/v1/activity/${uuid}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "ngrok-skip-browser-warning": 6024,
-        },
-      }
-    );
+    const res = await fetch(`http://localhost:3000/api/v1/activity/${uuid}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        // "ngrok-skip-browser-warning": 6024,
+      },
+    });
 
     if (!res.ok) throw new Error("Failed to fetch data");
 
@@ -119,12 +143,12 @@ const forgetPassword = async ({ email }) => {
   console.log(email);
   try {
     const res = await fetch(
-      `https://f20d-103-19-109-29.ngrok-free.app/api/v1/user/forgotpassword`,
+      `http://localhost:3000/api/v1/user/forgotpassword`,
       {
         method: "POST",
         headers: {
           "Content-type": "application/json",
-          "ngrok-skip-browser-warning": 6024,
+          // "ngrok-skip-browser-warning": 6024,
         },
         body: JSON.stringify({ email }),
       }
@@ -141,16 +165,13 @@ const forgetPassword = async ({ email }) => {
 
 const deleteActivity = async (uuid, token) => {
   try {
-    const res = await fetch(
-      `https://f20d-103-19-109-29.ngrok-free.app/api/v1/activity/${uuid}`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "ngrok-skip-browser-warning": 6024,
-        },
-      }
-    );
+    const res = await fetch(`http://localhost:3000/api/v1/activity/${uuid}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        // "ngrok-skip-browser-warning": 6024,
+      },
+    });
 
     if (!res.ok) {
       throw new Error("failed to delete the data");
@@ -162,18 +183,15 @@ const deleteActivity = async (uuid, token) => {
 
 const insertActivity = async (values, token) => {
   try {
-    const res = await fetch(
-      "https://f20d-103-19-109-29.ngrok-free.app/api/v1/activity/",
-      {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${token}`,
-          "ngrok-skip-browser-warning": 6024,
-        },
-        body: JSON.stringify(values),
-      }
-    );
+    const res = await fetch("http://localhost:3000/api/v1/activity/", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+        // "ngrok-skip-browser-warning": 6024,
+      },
+      body: JSON.stringify(values),
+    });
     if (!res.ok) {
       throw new Error("Creating Activity failed");
     }
@@ -186,17 +204,14 @@ const insertActivity = async (values, token) => {
 
 const createNewUser = async ({ email, password, confirmPassword }) => {
   try {
-    const res = await fetch(
-      "https://f20d-103-19-109-29.ngrok-free.app/api/v1/user/register",
-      {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          "ngrok-skip-browser-warning": 6024,
-        },
-        body: JSON.stringify({ email, password, confirmPassword }),
-      }
-    );
+    const res = await fetch("http://localhost:3000/api/v1/user/register", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        // "ngrok-skip-browser-warning": 6024,
+      },
+      body: JSON.stringify({ email, password, confirmPassword }),
+    });
     console.log(res);
     if (!res.ok) {
       throw new Error("Failed to register the user");
@@ -219,4 +234,5 @@ export {
   resetPasword,
   getSortActivities,
   verifyEmail,
+  updateActivity,
 };

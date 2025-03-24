@@ -1,19 +1,26 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import dropdown from "../assets/dropdown.svg";
 
 function Filter() {
   const [initialState, setInitialState] = useState("Latest Date");
   const [isActive, setIsActive] = useState(false);
+  const navigate = useNavigate();
 
   const listStyle = "p-2 text-black";
   const hoverListStyle =
     "hover:bg-blue-950 hover:rounded-lg hover:text-white duration-300";
 
+  function handleClick(e) {
+    const selectedValue = e.target.getAttribute("data-value");
+    const param = e.target.getAttribute("data-param");
+    setInitialState(selectedValue);
+    navigate(`/activity?sortBy=${param}`);
+  }
   const sortList = [
-    "Latest Date",
-    "Oldest Date",
-    "Longest Distance",
-    "Shortest Distance",
+    { label: "Latest Date", value: "latestdate" },
+    { label: "Oldest Date", value: "oldestdate" },
+    { label: "Nearby", value: "nearby" },
   ];
 
   return (
@@ -29,13 +36,15 @@ function Filter() {
         {isActive && (
           <div className="absolute top-[40px] w-full bg-white p-3 shadow-lg rounded-xl">
             <ul>
-              {sortList.map((list, idx) => (
+              {sortList.map((item, idx) => (
                 <li
                   key={idx}
-                  onClick={() => setInitialState({ list })}
-                  className={`${listStyle} ${hoverListStyle}`}
+                  data-value={item.label}
+                  data-param={item.value}
+                  onClick={handleClick}
+                  className={`${listStyle} ${hoverListStyle} cursor-pointer`}
                 >
-                  {list}
+                  {item.label}
                 </li>
               ))}
             </ul>

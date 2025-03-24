@@ -1,11 +1,44 @@
 import clock from "../assets/clock.svg";
+import { useEffect, useState } from "react";
 import navigation from "../assets/grey_navigation.svg";
-import { Link } from "react-router";
-import { formatDate, formatTime, durationsCalc } from "../utils/timeFormatter";
+import { Link, useLocation } from "react-router";
+import {
+  formatDate,
+  formatTime,
+  durationsCalc,
+  dateToMs,
+} from "../utils/timeFormatter";
 import { useGetActivities, useDeleteActivity } from "../lib/tsQuery/queries";
 
 function ActivityList() {
-  const { data, isLoading, error } = useGetActivities();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const sortBy = queryParams.get("sortBy");
+  const description = queryParams.get("description");
+  const [coords, setCoords] = useState({ lat: null, lng: null });
+
+  useEffect(() => {
+    if (sortBy === "nearby") {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setCoords({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+        }
+      );
+    }
+  }, [sortBy]);
+
+  const { data, isLoading, error } = useGetActivities({
+    sortBy,
+    description,
+    lat: coords.lat,
+    lng: coords.lng,
+  });
   const { mutate: deleteActivity } = useDeleteActivity();
 
   function handleMouseIn(uuid) {
@@ -15,11 +48,10 @@ function ActivityList() {
     document.querySelector(`.activity${uuid}`).classList.remove("slide-in");
   }
 
+  console.log(data);
+
   if (isLoading) return <p>Loading activities...</p>;
   if (data == undefined) return <p>No Data found</p>;
-  if (!data || typeof data !== "object") {
-    return <p>No activities found</p>;
-  }
   if (error) return <></>;
 
   return (
@@ -45,7 +77,12 @@ function ActivityList() {
                   <div className="w-full px-3 shrink-0">
                     <div className="flex justify-between w-full">
                       <span>
-                        {durationsCalc(activity.start_time, activity.end_time)}
+                        {durationsCalc(
+                          activity.start_time,
+                          activity.end_time,
+                          dateToMs(activity.start_time),
+                          dateToMs(activity.end_time)
+                        )}
                       </span>
                       <span>{activity.description}</span>
                     </div>

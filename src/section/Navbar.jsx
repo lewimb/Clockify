@@ -11,7 +11,7 @@ function Navbar() {
         <Link to={"/"} className={linkStyle}>
           Timer
         </Link>
-        <Link to={"/activity"} className={linkStyle}>
+        <Link to={"/activity?sortBy=latestdate"} className={linkStyle}>
           Activity
         </Link>
       </div>

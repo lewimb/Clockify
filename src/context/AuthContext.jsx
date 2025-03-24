@@ -16,22 +16,18 @@ const AuthProvider = ({ children }) => {
 
   const loginAction = async (value) => {
     try {
-      const response = await fetch(
-        "https://f20d-103-19-109-29.ngrok-free.app/api/v1/user/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(value),
-        }
-      );
+      const response = await fetch("http://localhost:3000/api/v1/user/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(value),
+      });
       const res = await response.json();
       console.log(res.token);
       if (res.status === "success") {
         setUser(res.user);
         setToken(res.token);
-        console.log("lewi");
         Cookies.set("token", res.token, { expires: 7 });
         navigate("/");
       }

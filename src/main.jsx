@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import TimerPage from "./pages/TimerPage.jsx";
+import { Suspense } from "react";
 import SignInPage from "./pages/auth/SignInPage.jsx";
 import EmailPage from "./pages/EmailPage.jsx";
 import RegisterPage from "./pages/auth/RegisterPage.jsx";
@@ -22,20 +23,22 @@ createRoot(document.getElementById("root")).render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AuthProvider>
-          <Routes>
-            <Route path="/" element={<MainLayout />}>
-              <Route index element={<TimerPage />} />
-              <Route path="/activity" element={<ActivityPage />} />
-              <Route path="/activity/:id" element={<EditPage />} />
-            </Route>
-            <Route element={<AuthLayout />}>
-              <Route path="login" element={<SignInPage />} />
-              <Route path="register" element={<RegisterPage />} />
-              <Route path="verify-email" element={<EmailPage />} />
-              <Route path="forget" element={<ForgetPage />} />
-              <Route path="reset-password" element={<ResetPage />} />
-            </Route>
-          </Routes>
+          <Suspense>
+            <Routes>
+              <Route path="/" element={<MainLayout />}>
+                <Route index element={<TimerPage />} />
+                <Route path="/activity" element={<ActivityPage />} />
+                <Route path="/activity/:id" element={<EditPage />} />
+              </Route>
+              <Route element={<AuthLayout />}>
+                <Route path="login" element={<SignInPage />} />
+                <Route path="register" element={<RegisterPage />} />
+                <Route path="verify-email" element={<EmailPage />} />
+                <Route path="forget" element={<ForgetPage />} />
+                <Route path="reset-password" element={<ResetPage />} />
+              </Route>
+            </Routes>
+          </Suspense>
         </AuthProvider>
       </BrowserRouter>
     </QueryClientProvider>
