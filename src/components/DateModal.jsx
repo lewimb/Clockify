@@ -13,6 +13,7 @@ function DateModal({
     changeStateDate(e.target.value);
     const date = formatDate(e.target.value);
     updateDate(date);
+    console.log(date);
   }
 
   const [stateDate, changeStateDate] = useState(selectedDate);
